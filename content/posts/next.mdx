@@ -1,13 +1,13 @@
 ---
-title: "使用 Next.js + MDX 构建现代博客（含代码示例）"
-date: "2025-01-20"
+title: '使用 Next.js + MDX 构建现代博客（含代码示例）'
+date: '2025-01-20'
 tags:
   - nextjs
   - mdx
   - react
   - tailwind
-cover: "/images/posts/avatar.jpg"
-excerpt: "本文展示如何在 Next.js 16 中使用 MDX 渲染文章，并且实现暗色 / 亮色主题适配，以及自定义组件。"
+cover: '/images/posts/avatar.jpg'
+excerpt: '本文展示如何在 Next.js 16 中使用 MDX 渲染文章，并且实现暗色 / 亮色主题适配，以及自定义组件。'
 ---
 
 在这篇文章里，我们将展示如何：
@@ -25,23 +25,19 @@ excerpt: "本文展示如何在 Next.js 16 中使用 MDX 渲染文章，并且�
 ## 🧩 基础 React 组件示例
 
 ```tsx
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import ProfileCard from "@/components/ProfileCard";
-import Footer from "@/components/Footer";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import type { Metadata } from 'next'
+import './globals.css'
+import Navbar from '@/components/Navbar'
+import ProfileCard from '@/components/ProfileCard'
+import Footer from '@/components/Footer'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
   title: "ruichouw's blog",
-  description: "个人博客",
-};
+  description: '个人博客',
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className="min-h-screen">
@@ -75,10 +71,52 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
 ```
 
 ---
 
 ## 下文介绍
+
+为了快乐使用一些“邮箱注册”+“免费试用”的软件，我尝试了自建邮局以随意获取电子邮箱地址
+
+另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：
+
+---
+
+## 参考资料
+
+- [Next.js 官方 MDX 指南](https://nextjs.org/docs/app/building-your-application/markdown-and-mdx)
+- [rehype-slug](https://github.com/rehypejs/rehype-slug)
+  另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：
+另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+### 哈哈哈
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：
+另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：
+另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：
+另外，还可以发出带有自己专属后缀的电子邮件，应用于网站发出验证码、通知等
+
+注：本文仅探讨本人在自建邮局时遇到的问题和技术分享，获取自己域名后缀电子邮箱地址的方法还有很多，例如：企业邮箱、Cloudflare邮件路由（只收不发）、临时电子邮件地址等
+
+自建邮局可以获得一个高度可控、隐私性强，且能够完全自定义的邮件服务，配合自动化流程，个性化网页等，并且无需为账号数量以及存储空间额外付费。但也有如下缺陷：

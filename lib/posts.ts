@@ -1,58 +1,57 @@
 // lib/posts.ts
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
 
-import { compileMDX } from "next-mdx-remote/rsc";
-import { mdxComponents } from "@/components/mdx-components";
+import { compileMDX } from 'next-mdx-remote/rsc'
+import { mdxComponents } from '@/components/mdx-components'
+import remarkGfm from 'remark-gfm'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
-import rehypePrettyCode, {
-  type Options as PrettyCodeOptions,
-} from "rehype-pretty-code";
-
-import remarkGfm from "remark-gfm";
+import rehypePrettyCode, { type Options as PrettyCodeOptions } from 'rehype-pretty-code'
 
 export type PostMeta = {
-  slug: string;
-  title: string;
-  date: string;
-  tags: string[];
-  cover?: string;
-  excerpt?: string;
-};
+  slug: string
+  title: string
+  date: string
+  tags: string[]
+  cover?: string
+  excerpt?: string
+}
 
 export type PostFrontmatter = {
-  title: string;
-  date: string;
-  tags?: string[];
-  cover?: string;
-  excerpt?: string;
-};
+  title: string
+  date: string
+  tags?: string[]
+  cover?: string
+  excerpt?: string
+}
 
-const postsDirectory = path.join(process.cwd(), "content", "posts");
+const postsDirectory = path.join(process.cwd(), 'content', 'posts')
 
 // 代码高亮配置
 const prettyCodeOptions: PrettyCodeOptions = {
   // 固定主题，one-dark-pro
   // 其它可选： "github-dark", "github-light", "dracula" 等
-  theme: "one-dark-pro",
+  theme: 'one-dark-pro',
   keepBackground: false,
-  defaultLang: "plaintext",
-};
+  defaultLang: 'plaintext',
+}
 
 // ============ 列表页：只读 meta ============
 
 export function getAllPostsMeta(): PostMeta[] {
-  const files = fs.readdirSync(postsDirectory);
+  const files = fs.readdirSync(postsDirectory)
 
   const posts = files
-    .filter((file) => file.endsWith(".mdx"))
+    .filter((file) => file.endsWith('.mdx'))
     .map((file) => {
-      const slug = file.replace(/\.mdx$/, "");
-      const fullPath = path.join(postsDirectory, file);
-      const fileContents = fs.readFileSync(fullPath, "utf8");
+      const slug = file.replace(/\.mdx$/, '')
+      const fullPath = path.join(postsDirectory, file)
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
 
-      const { data } = matter(fileContents);
+      const { data } = matter(fileContents)
 
       return {
         slug,
@@ -61,23 +60,23 @@ export function getAllPostsMeta(): PostMeta[] {
         tags: (data.tags ?? []) as string[],
         cover: data.cover as string | undefined,
         excerpt: data.excerpt as string | undefined,
-      } satisfies PostMeta;
+      } satisfies PostMeta
     })
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
 
-  return posts;
+  return posts
 }
 
 // ============ 详情页：编译 MDX ============
 
 export async function getPostBySlug(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`);
+  const fullPath = path.join(postsDirectory, `${slug}.mdx`)
 
   if (!fs.existsSync(fullPath)) {
-    return null;
+    return null
   }
 
-  const source = fs.readFileSync(fullPath, "utf8");
+  const source = fs.readFileSync(fullPath, 'utf8')
 
   const { content, frontmatter } = await compileMDX<PostFrontmatter>({
     source,
@@ -85,11 +84,16 @@ export async function getPostBySlug(slug: string) {
       parseFrontmatter: true,
       mdxOptions: {
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
+        rehypePlugins: [
+          [rehypePrettyCode, prettyCodeOptions], // 代码高亮
+          rehypeSlug, // ⭐ 给 h2/h3 自动加 id
+          [rehypeAutolinkHeadings, { behavior: 'wrap' }], // ⭐ 标题变成可点击锚点
+        ],
+        format: 'mdx',
       },
     },
     components: mdxComponents,
-  });
+  })
 
   const meta: PostMeta = {
     slug,
@@ -98,13 +102,13 @@ export async function getPostBySlug(slug: string) {
     tags: frontmatter.tags ?? [],
     cover: frontmatter.cover,
     excerpt: frontmatter.excerpt,
-  };
+  }
 
-  return { meta, content };
+  return { meta, content }
 }
 
 // ============ generateStaticParams 用 ============
 
 export function generatePostParams() {
-  return getAllPostsMeta().map((post) => ({ slug: post.slug }));
+  return getAllPostsMeta().map((post) => ({ slug: post.slug }))
 }

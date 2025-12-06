@@ -1,39 +1,35 @@
 // app/posts/[slug]/page.tsx
-import { notFound } from "next/navigation";
-import { getPostBySlug, generatePostParams } from "@/lib/posts";
+import { notFound } from 'next/navigation'
+import { getPostBySlug, generatePostParams } from '@/lib/posts'
 
 // ⭐ 注意这里：params 是 Promise
 type PostPageProps = {
-  params: Promise<{ slug: string }>;
-};
+  params: Promise<{ slug: string }>
+}
 
 export async function generateStaticParams() {
-  return generatePostParams();
+  return generatePostParams()
 }
 
 export default async function PostPage({ params }: PostPageProps) {
   // ⭐ 必须先 await params，再解构 slug
-  const { slug } = await params;
+  const { slug } = await params
 
-  const post = await getPostBySlug(slug);
+  const post = await getPostBySlug(slug)
 
   if (!post) {
-    notFound();
+    notFound()
   }
 
-  const { meta, content } = post;
+  const { meta, content } = post
 
   return (
     <main className="min-h-screen px-4 py-10 md:px-6">
-      <article className="mx-auto flex max-w-6xl flex-col gap-8">
+      <article className="mx-auto flex max-w-5xl flex-col gap-8">
         <header className="rounded-3xl border border-black/5 bg-white/80 p-6 shadow-sm backdrop-blur md:p-8 dark:border-white/10 dark:bg-[#050712]/90">
           {meta.cover && (
             <div className="relative mb-6 h-52 w-full overflow-hidden rounded-2xl md:h-64">
-              <img
-                src={meta.cover}
-                alt={meta.title}
-                className="h-full w-full object-cover"
-              />
+              <img src={meta.cover} alt={meta.title} className="h-full w-full object-cover" />
             </div>
           )}
 
@@ -72,5 +68,5 @@ export default async function PostPage({ params }: PostPageProps) {
         </section>
       </article>
     </main>
-  );
+  )
 }

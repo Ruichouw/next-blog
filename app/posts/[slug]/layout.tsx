@@ -1,25 +1,24 @@
 // app/posts/layout.tsx
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import { ArticleToc } from '@/components/ArticleToc'
 
-export default function PostsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function PostsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pb-10 pt-4">
       <Navbar />
 
-      {/* 主区域与首页一致 */}
-      <main className="mt-6 flex-1">
-        {/* 内层内容区域稍微收窄，居中（阅读区域） */}
-        <div className="mx-auto w-full max-w-6xl space-y-6 xxxx">
-          {children}
-        </div>
+      <main className="mt-6 flex flex-1 gap-6">
+        {/* 左侧：文章内容 */}
+        <section className="flex-1 space-y-6">{children}</section>
+
+        {/* 右侧：目录，仅 md+ 显示 */}
+        <aside className="hidden w-72 shrink-0 md:block">
+          <ArticleToc />
+        </aside>
       </main>
 
       <Footer />
     </div>
-  );
+  )
 }
