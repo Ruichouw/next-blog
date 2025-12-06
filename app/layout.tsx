@@ -1,9 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import ProfileCard from "@/components/ProfileCard";
-import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
@@ -32,18 +29,8 @@ export default function RootLayout({
               <div className="absolute inset-0 opacity-40 mix-blend-soft-light bg-[radial-gradient(circle_at_top,_#1e293b,_transparent_60%),radial-gradient(circle_at_bottom,_#020617,_transparent_55%)]" />
             </div>
 
-            <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pb-10 pt-4">
-              <Navbar />
-              <main className="mt-6 flex flex-1 gap-6">
-                <section className="flex-1 space-y-6">{children}</section>
-
-                {/* 个人卡片：md 以上才显示 */}
-                <aside className="hidden w-72 shrink-0 md:block">
-                  <ProfileCard />
-                </aside>
-              </main>
-              <Footer />
-            </div>
+            {/* 下面交给各个子 layout 决定结构 */}
+            {children}
           </div>
         </ThemeProvider>
       </body>

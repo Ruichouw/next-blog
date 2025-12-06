@@ -25,7 +25,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <main className="min-h-screen px-4 py-10 md:px-6">
-      <article className="mx-auto flex max-w-4xl flex-col gap-8">
+      <article className="mx-auto flex max-w-6xl flex-col gap-8">
         <header className="rounded-3xl border border-black/5 bg-white/80 p-6 shadow-sm backdrop-blur md:p-8 dark:border-white/10 dark:bg-[#050712]/90">
           {meta.cover && (
             <div className="relative mb-6 h-52 w-full overflow-hidden rounded-2xl md:h-64">
