@@ -20,3 +20,6 @@
     color: var(--foreground);
   }
 }
+
+/* 让 dark: 变体以 .dark 类为开关，而不是系统 prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
