@@ -5,8 +5,6 @@
   --foreground: #171717;
 }
 
-
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -23,3 +21,28 @@
 
 /* 让 dark: 变体以 .dark 类为开关，而不是系统 prefers-color-scheme */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* 代码块滚动条整体设置 */
+.code-block {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+}
+
+/* WebKit: Chrome / Edge / Safari */
+.code-block::-webkit-scrollbar {
+  height: 6px; /* 只需要横向滚动条的高度 */
+}
+
+.code-block::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(to right, #64748b, #94a3b8);
+}
+
+/* 暗色模式下的滚动条颜色 */
+.dark .code-block::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #4f46e5, #ec4899);
+}

@@ -1,7 +1,7 @@
-// components/mdx-components.tsx
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
+import { CodeBlock } from "@/components/CodeBlock";
 
 export const mdxComponents: MDXComponents = {
   h1: (props) => (
@@ -48,26 +48,18 @@ export const mdxComponents: MDXComponents = {
     />
   ),
 
-  // ✅ 只给 pre 做“容器”样式，**不要设置 text-xxx**
-  pre: ({ children }) => (
-    <pre
-      className="mt-4 overflow-x-auto rounded-2xl bg-[#050711]/95 p-4 text-sm shadow-inner shadow-black/40
-                 dark:bg-[#050711]/95"
-    >
-      {children}
-    </pre>
-  ),
+  // ⭐ 所有 fenced code block 都走 CodeBlock（里面有复制+折叠）
+  pre: (props) => <CodeBlock {...(props as any)} />,
 
-  // ✅ inline code 才加底色 + 颜色；block code 交给 pretty-code 管
+  // 行内代码仍然保持之前的样式
   code: (props) => {
-    // rehype-pretty-code 对 block code 会加 data-theme、data-language 等标记
-    // 有这些标记的，我们认为是“高亮代码块”，不再强行加 text-xxx
     const anyProps = props as any;
     if (anyProps["data-theme"] || anyProps["data-language"]) {
+      // 块级代码（给 pretty-code 用），不要强行改颜色
       return <code {...props} />;
     }
 
-    // 其它情况当作“行内代码”
+    // 行内代码
     return (
       <code
         className="rounded bg-black/5 px-1.5 py-0.5 text-sm text-pink-600 dark:bg-white/10 dark:text-pink-300"
