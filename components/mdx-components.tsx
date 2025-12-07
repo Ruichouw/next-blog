@@ -1,7 +1,7 @@
-import type { MDXComponents } from "mdx/types";
-import Image from "next/image";
-import Link from "next/link";
-import { CodeBlock } from "@/components/CodeBlock";
+import type { MDXComponents } from 'mdx/types'
+import Image from 'next/image'
+import Link from 'next/link'
+import { CodeBlock } from '@/components/CodeBlock'
 
 export const mdxComponents: MDXComponents = {
   h1: (props) => (
@@ -22,23 +22,10 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  p: (props) => (
-    <p
-      className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300"
-      {...props}
-    />
-  ),
-  ul: (props) => (
-    <ul
-      className="mt-4 list-disc pl-6 text-gray-700 dark:text-gray-300"
-      {...props}
-    />
-  ),
+  p: (props) => <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300" {...props} />,
+  ul: (props) => <ul className="mt-4 list-disc pl-6 text-gray-700 dark:text-gray-300" {...props} />,
   ol: (props) => (
-    <ol
-      className="mt-4 list-decimal pl-6 text-gray-700 dark:text-gray-300"
-      {...props}
-    />
+    <ol className="mt-4 list-decimal pl-6 text-gray-700 dark:text-gray-300" {...props} />
   ),
   li: (props) => <li className="mt-1" {...props} />,
   a: (props) => (
@@ -53,10 +40,10 @@ export const mdxComponents: MDXComponents = {
 
   // 行内代码仍然保持之前的样式
   code: (props) => {
-    const anyProps = props as any;
-    if (anyProps["data-theme"] || anyProps["data-language"]) {
+    const anyProps = props as any
+    if (anyProps['data-theme'] || anyProps['data-language']) {
       // 块级代码（给 pretty-code 用），不要强行改颜色
-      return <code {...props} />;
+      return <code {...props} />
     }
 
     // 行内代码
@@ -65,14 +52,13 @@ export const mdxComponents: MDXComponents = {
         className="rounded bg-black/5 px-1.5 py-0.5 text-sm text-pink-600 dark:bg-white/10 dark:text-pink-300"
         {...props}
       />
-    );
+    )
   },
 
   img: (props) => (
     <div className="relative my-6 overflow-hidden rounded-2xl">
-      {/* @ts-expect-error src 在这里是有的 */}
       <Image
-        alt={props.alt ?? ""}
+        alt={props.alt ?? ''}
         src={props.src}
         width={800}
         height={450}
@@ -80,4 +66,4 @@ export const mdxComponents: MDXComponents = {
       />
     </div>
   ),
-};
+}
