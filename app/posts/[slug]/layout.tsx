@@ -5,12 +5,13 @@ import { ArticleToc } from '@/components/ArticleToc'
 
 export default function PostsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pb-10 pt-4">
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pb-10 pt-4 sm:px-6 lg:px-8">
       <Navbar />
 
-      <main className="mt-6 flex flex-1 gap-6">
+      {/* 小屏竖排，md+ 才变成左右布局 */}
+      <main className="mt-6 flex flex-1 flex-col gap-6 md:flex-row">
         {/* 左侧：文章内容 */}
-        <section className="flex-1 space-y-6">{children}</section>
+        <section className="flex-1">{children}</section>
 
         {/* 右侧：目录，仅 md+ 显示 */}
         <aside className="hidden w-72 shrink-0 md:block">
