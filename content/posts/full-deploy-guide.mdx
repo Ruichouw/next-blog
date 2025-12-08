@@ -1,0 +1,276 @@
+---
+title: '🚀 关于next博客部署的一二事'
+date: '2025-02-07'
+tags:
+  - 部署
+  - Node.js
+  - Next.js
+  - SSH
+  - GitHub
+  - pm2
+  - Linux
+summary: '最完整的 Next.js 部署指南：覆盖 HTTPS/SSH 拉取代码、服务器环境搭建、pm2 管理进程、SSH 免密、本地构建一键部署脚本、scp 上传、生产依赖安装等全部细节。'
+---
+
+# 远程服务器拉取github代码的方式
+
+## https形式
+
+每次都需要提供用户名和密码（token）
+
+token需要到github的设置-开发者设置中新建一个token
+
+---
+
+有个问题，为什么我本地的电脑每次用https只需要输入一次用户名和密码，后面就都不用了，为什么服务器每次都需要？
+
+> 微软的 **Git Credential Manager（GCM）**。  
+> 它会在第一次用 HTTPS 访问 GitHub 时弹窗让你输入账号/密码，之后把你的凭据安全存储在：
+>
+> - Windows 凭据管理器（Credential Manager）
+> - 路径：控制面板 → 用户账户 → 凭据管理器 → Windows 凭据
+>
+> 里面你能找到类似：
+>
+> `git:https://github.com`
+>
+> **Git 就会自动读取这里的记录，所以你完全不用再输入密码。**
+>
+> 服务器上使用的是纯命令行 Git，没有 GUI，**没有弹窗，没有 Windows Credential Manager。 除非你手动开启凭据缓存，但这会把 token 以明文保存，不安全。**
+
+## ssh形式
+
+### 1. 在服务器上生成 SSH Key
+
+```bash
+ssh-keygen -t ed25519 -C "hcss-ecs-ec69 deploy"
+```
+
+之后打印公钥：
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+输出内容类似：
+
+```bash
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIxxxxxx... hcss-ecs-ec69 deploy
+```
+
+---
+
+### 2. 把公钥添加到 GitHub
+
+GitHub → Settings → SSH and GPG keys → New SSH key
+
+---
+
+### 3. 测试 SSH 是否配置成功
+
+```bash
+ssh -T git@github.com
+```
+
+确认提示输入 **yes**。  
+若输出：
+
+```bash
+You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+即成功。
+
+---
+
+### 4. 把仓库 remote 修改成 SSH 版本
+
+```bash
+cd /root/apps/my-blog
+git remote -v
+git remote set-url origin git@github.com:Ruichouw/next-blog.git
+git pull origin main
+```
+
+---
+
+# 服务器安装nvm,node,pnpm步骤
+
+## 安装nvm
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+source ~/.bashrc
+nvm -v
+```
+
+## 安装node，npm ,pnpm
+
+```bash
+nvm install 22
+nvm use 22
+npm -v
+npm install -g pnpm
+pnpm -v
+```
+
+---
+
+# 在服务器上启动项目并用pm2管理项目进程
+
+安装依赖：
+
+```bash
+cd ~/apps/my-blog
+pnpm install
+```
+
+打包：
+
+```bash
+pnpm build
+pnpm start
+```
+
+更新代码：
+
+```bash
+git pull origin main
+```
+
+安装 pm2：
+
+```bash
+pnpm add -g pm2
+pm2 -v
+```
+
+使用 pm2 管理：
+
+```bash
+pm2 start pnpm --name my-blog -- start
+pm2 save
+pm2 startup
+pm2 status
+```
+
+---
+
+# 实现本地git bash免密登录远程服务器
+
+## 本地打印公钥
+
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+
+复制整行，从 `ssh-rsa AAAA...` 开始。
+
+## 服务器配置
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+## 测试
+
+```bash
+ssh user@server_ip
+```
+
+---
+
+# 实现本地构建打包+服务器运行的一键部署脚本
+
+由于服务器性能差，本地构建 → scp 上传 → 服务器解压部署更快。
+
+流程：
+
+- 本地 `pnpm build`
+- 打包 `.next`
+- 上传 `.tar.gz`
+- 服务器执行 `server-deploy.sh`
+- 删除旧 `.next` → 解压 → 安装依赖 → pm2 reload
+
+---
+
+# 本地 deploy.sh
+
+```bash
+#!/bin/bash
+set -e
+
+LOCAL_PROJECT_DIR="/d/FontCode/blog/my-blog"
+REMOTE_USER="root"
+REMOTE_HOST="110.41.19.112"
+REMOTE_DIR="/root/apps/my-blog"
+TAR_NAME="build-artifact.tar.gz"
+GIT_BRANCH="main"
+
+cd "$LOCAL_PROJECT_DIR"
+git pull origin "$GIT_BRANCH"
+
+pnpm install
+pnpm build
+
+rm -f "$TAR_NAME"
+
+tar czf "$TAR_NAME"   .next   package.json   pnpm-lock.yaml   next.config.*   public
+
+scp "$TAR_NAME" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/$TAR_NAME"
+
+ssh "$REMOTE_USER@$REMOTE_HOST" "cd $REMOTE_DIR && ./server-deploy.sh"
+
+echo "🎉 部署完成！"
+```
+
+---
+
+# 服务器 server-deploy.sh
+
+```bash
+#!/bin/bash
+set -e
+
+export NVM_DIR="/root/.nvm"
+source "$NVM_DIR/nvm.sh"
+
+APP_DIR="/root/apps/my-blog"
+PM2_APP_NAME="my-blog"
+TAR_NAME="build-artifact.tar.gz"
+PNPM="/root/.nvm/versions/node/v22.21.1/bin/pnpm"
+
+cd "$APP_DIR"
+
+if [ ! -f "$TAR_NAME" ]; then
+  echo "❌ 找不到 $TAR_NAME"
+  exit 1
+fi
+
+rm -rf .next
+
+tar xzf "$TAR_NAME"
+
+$PNPM install --prod --frozen-lockfile
+
+pm2 reload "$PM2_APP_NAME"
+
+rm -f "$TAR_NAME"
+
+echo "✅ 服务器部署完成 $(date)"
+```
+
+---
+
+# 后续部署流程
+
+打开 Git Bash：
+
+```bash
+./deploy.sh
+```
+
+🎉 完整自动部署。
