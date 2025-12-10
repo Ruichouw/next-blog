@@ -43,3 +43,4 @@ next-env.d.ts
 build-artifact.tar.gz
 
 server-deploy.sh
+PROJECT_SUMMARY.md

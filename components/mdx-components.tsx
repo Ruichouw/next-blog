@@ -55,15 +55,14 @@ export const mdxComponents: MDXComponents = {
     )
   },
 
+  // 直接输出 Image，避免 Markdown 默认的 <p><img/></p> 包裹后出现 <div> 嵌套在 <p> 里的无效结构
   img: (props) => (
-    <div className="relative my-6 overflow-hidden rounded-2xl">
-      <Image
-        alt={props.alt ?? ''}
-        src={props.src}
-        width={800}
-        height={450}
-        className="h-auto w-full object-cover"
-      />
-    </div>
+    <Image
+      alt={props.alt ?? ''}
+      src={props.src}
+      width={800}
+      height={450}
+      className="my-6 h-auto w-full rounded-2xl object-cover"
+    />
   ),
 }

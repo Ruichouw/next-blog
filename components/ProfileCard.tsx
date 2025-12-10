@@ -28,7 +28,8 @@ export default function ProfileCard() {
         {/* 头像 */}
         <div className="rounded-full p-[2px] bg-slate-200 dark:bg-slate-700/40">
           <div className="relative h-20 w-20 overflow-hidden rounded-full bg-white shadow-sm dark:bg-slate-900">
-            <Image src="/avatar.jpg" alt="avatar" fill sizes="80px" />
+            {/* 首屏头像标记为高优先级，避免 LCP 警告 */}
+            <Image src="/avatar.jpg" alt="avatar" fill sizes="80px" priority />
           </div>
         </div>
 

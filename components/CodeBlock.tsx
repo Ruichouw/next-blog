@@ -1,7 +1,7 @@
 "use client";
 
 import type { HTMLAttributes, ReactNode } from "react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 type CodeBlockProps = HTMLAttributes<HTMLPreElement> & {
@@ -12,8 +12,24 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [copied, setCopied] = useState(false);
   const preRef = useRef<HTMLPreElement | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // 监听视口尺寸，移动端禁用折叠/复制
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // 移动端强制不折叠
+  useEffect(() => {
+    if (!isDesktop) setCollapsed(false);
+  }, [isDesktop]);
 
   const handleCopy = async () => {
+    if (!isDesktop) return;
     if (!navigator?.clipboard) return;
     const text = preRef.current?.innerText ?? "";
     if (!text.trim()) return;
@@ -29,8 +45,8 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
 
   return (
     <div className="group relative my-4">
-      {/* 右上角按钮：放进一个 pill 容器里，稍微往下、往左一点 */}
-      <div className="pointer-events-none absolute right-4 top-3 z-10 flex gap-2">
+      {/* 右上角按钮：桌面端显示，移动端隐藏 */}
+      <div className="pointer-events-none absolute right-4 top-3 z-10 hidden gap-2 md:flex">
         <div className="flex gap-2 rounded-full bg-black/40 px-2 py-1 text-[11px] text-gray-100 backdrop-blur-sm dark:bg-white/10 dark:text-gray-100">
           <button
             type="button"
@@ -41,7 +57,7 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
           </button>
           <button
             type="button"
-            onClick={() => setCollapsed((v) => !v)}
+            onClick={() => isDesktop && setCollapsed((v) => !v)}
             className="pointer-events-auto rounded-full px-2 py-0.5 hover:bg-black/40 dark:hover:bg白/20"
           >
             {collapsed ? "⬇ 展开" : "⬆ 折叠"}
@@ -58,7 +74,7 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
           // 展开：可以滚动
           !collapsed && "overflow-auto whitespace-pre",
           // 折叠：完全隐藏多余内容，不要竖向滚动条
-          collapsed && "max-h-24 overflow-hidden whitespace-pre",
+          collapsed && isDesktop && "max-h-24 overflow-hidden whitespace-pre",
           className,
         )}
       >
@@ -66,7 +82,7 @@ export function CodeBlock({ children, className, ...rest }: CodeBlockProps) {
       </pre>
 
       {/* 折叠时的渐变遮罩 */}
-      {collapsed && (
+      {collapsed && isDesktop && (
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 rounded-b-2xl bg-gradient-to-t from-[#050711]/95 to-transparent" />
       )}
     </div>
