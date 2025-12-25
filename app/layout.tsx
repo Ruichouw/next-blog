@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   verification: {
     google: 'C8hOsmmQ2EvmPpYgHBQwGECoCjD9Ewp5LiZWpo3eLNo',
   },
+  metadataBase: new URL('http://blog.ruichouw.xyz'),
+  alternates: {
+    canonical: 'http://blog.ruichouw.xyz/',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
