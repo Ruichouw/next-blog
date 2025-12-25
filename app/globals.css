@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -45,4 +45,13 @@
 /* 暗色模式下的滚动条颜色 */
 .dark .code-block::-webkit-scrollbar-thumb {
   background: linear-gradient(to right, #4f46e5, #ec4899);
+}
+
+/* 去掉竖直滚动条 */
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }

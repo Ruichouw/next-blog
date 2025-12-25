@@ -14,7 +14,7 @@ export default function PostsLayout({ children }: { children: React.ReactNode })
         <section className="flex-1">{children}</section>
 
         {/* 右侧：目录，仅 md+ 显示 */}
-        <aside className="hidden w-72 shrink-0 md:block">
+        <aside className="hidden fixed right-1 top-1/2 -translate-y-1/2 w-70 shrink-0 md:block">
           <ArticleToc />
         </aside>
       </main>

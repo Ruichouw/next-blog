@@ -92,6 +92,7 @@ export function ArticleToc() {
         shadow-lg
         border border-white/60 dark:border-white/10
         px-4 py-4
+        overflow-y-auto scrollbar-none
       "
     >
       {/* 标题区 */}
