@@ -34,52 +34,73 @@ export default function ArchivesPage() {
   const years = Array.from(grouped.keys()).sort((a, b) => (a < b ? 1 : -1))
 
   return (
-    <main className="px-4 py-10">
-      <h1 className="text-2xl font-semibold">归档</h1>
-      <p className="mt-2 text-sm text-zinc-500">共 {posts.length} 篇文章</p>
+    <main className="w-full px-4 py-8 sm:py-10 ">
+      {/* 容器宽度跟随布局容器：默认全宽，内容居中且有最大宽度 */}
+      <div className="mx-auto w-full">
+        <h1 className="text-2xl font-semibold">归档</h1>
+        <p className="mt-2 text-sm text-zinc-500">共 {posts.length} 篇文章</p>
 
-      <div className="mt-8 space-y-10">
-        {years.map((year) => {
-          const monthsMap = grouped.get(year)!
-          const months = Array.from(monthsMap.keys()).sort((a, b) => (a < b ? 1 : -1))
+        <div className="mt-8 space-y-10">
+          {years.map((year) => {
+            const monthsMap = grouped.get(year)!
+            const months = Array.from(monthsMap.keys()).sort((a, b) => (a < b ? 1 : -1))
 
-          return (
-            <section key={year}>
-              <h2 className="text-xl font-semibold">{year}</h2>
+            return (
+              <section key={year} className="space-y-4">
+                <h2 className="text-xl font-semibold">{year}</h2>
 
-              <div className="mt-4 space-y-6">
-                {months.map((month) => {
-                  const monthPosts = monthsMap.get(month)!
+                <div className="space-y-5 sm:space-y-6">
+                  {months.map((month) => {
+                    const monthPosts = monthsMap.get(month)!
 
-                  return (
-                    <div key={`${year}-${month}`}>
-                      <div className="flex items-baseline justify-between">
-                        <h3 className="text-base font-medium">
-                          {month} 月
-                          <span className="ml-2 text-sm text-zinc-500">({monthPosts.length})</span>
-                        </h3>
-                      </div>
+                    return (
+                      <div key={`${year}-${month}`}>
+                        <div className="flex items-baseline justify-between">
+                          <h3 className="text-base font-medium">
+                            {month} 月
+                            <span className="ml-2 text-sm text-zinc-500">
+                              ({monthPosts.length})
+                            </span>
+                          </h3>
+                        </div>
 
-                      <ul className="mt-3 space-y-3">
-                        {monthPosts.map((p) => (
-                          <li key={p.slug} className="flex items-baseline justify-between gap-4">
-                            <Link
-                              href={`/posts/${p.slug}`}
-                              className="min-w-0 truncate hover:underline"
+                        <ul className="mt-3 space-y-3">
+                          {monthPosts.map((p) => (
+                            <li
+                              key={p.slug}
+                              className="
+                                rounded-lg py-1
+                                flex flex-col gap-1
+                                sm:flex-row sm:items-baseline sm:justify-between sm:gap-4 sm:py-0
+                              "
                             >
-                              {p.title}
-                            </Link>
-                            <span className="shrink-0 text-xs text-zinc-500">{p.date}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )
-                })}
-              </div>
-            </section>
-          )
-        })}
+                              <Link
+                                href={`/posts/${p.slug}`}
+                                className="
+                                  min-w-0
+                                  text-base sm:text-sm
+                                  leading-relaxed
+                                  break-words sm:truncate
+                                  hover:underline
+                                "
+                              >
+                                {p.title}
+                              </Link>
+
+                              <span className="text-xs text-zinc-400 sm:text-zinc-500 shrink-0">
+                                {p.date}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })}
+        </div>
       </div>
     </main>
   )

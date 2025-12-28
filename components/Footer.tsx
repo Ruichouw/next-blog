@@ -1,7 +1,7 @@
 // components/Footer.tsx
 export default function Footer() {
   return (
-    <footer className="mt-16 w-full pt-8 pb-8 text-center text-sm  text-slate-500">
+    <footer className=" w-full pt-8 pb-8 text-center text-sm  text-slate-500">
       {/* 渐变色顶部边框 */}
       <div className="mx-auto mb-6 h-[3px] w-full  bg-gradient-to-r from-teal-300 via-blue-500 to-pink-500 rounded-full" />
 
