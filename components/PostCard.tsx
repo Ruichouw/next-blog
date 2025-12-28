@@ -13,22 +13,20 @@ export function PostCard({ post }: { post: PostMeta }) {
       <article
         className={clsx(
           'mb-6 rounded-3xl p-[1px] transition-all duration-300',
-          // 夜间渐变边框
+          // ☀️ 日间：浅灰描边
+          'bg-gray-200/70',
+          // 🌙 夜间：渐变边框
           'dark:bg-gradient-to-r dark:from-purple-600/70 dark:via-pink-600/70 dark:to-blue-600/70',
-          // 日间渐变边框
-          'bg-gradient-to-r from-pink-400/40 via-orange-400/40 to-blue-400/40',
-          // hover 光效
-          'hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] dark:hover:shadow-[0_0_25px_rgba(255,255,255,0.08)]'
+          // hover
+          'hover:shadow-lg dark:hover:shadow-[0_0_25px_rgba(255,255,255,0.08)]'
         )}
       >
         <div
           className={clsx(
-            // ⭐ 始终横向布局：手机端也是 row，卡片高度更矮
             'flex items-stretch gap-4 md:gap-6 rounded-3xl px-4 py-3 md:px-6 md:py-5',
-            // 夜间内部背景
-            'dark:bg-[#0a0c14]/95',
-            // 日间内部背景
-            'bg-white/80 backdrop-blur shadow-sm'
+            'bg-white',
+            'shadow-md hover:shadow-lg transition-shadow',
+            'dark:bg-[#0a0c14]/95 dark:shadow-none'
           )}
         >
           {/* 封面图：固定宽高比，保证卡片宽>高 */}
