@@ -40,7 +40,7 @@ const prettyCodeOptions: PrettyCodeOptions = {
 }
 
 // ============ 列表页：只读 meta ============
-
+// 返回所有文章的 meta（含 tags）
 export function getAllPostsMeta(): PostMeta[] {
   const files = fs.readdirSync(postsDirectory)
 

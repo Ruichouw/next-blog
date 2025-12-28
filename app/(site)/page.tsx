@@ -1,9 +1,10 @@
 // app/page.tsx
-import { getAllPostsMeta } from "@/lib/posts";
-import { PostCard } from "@/components/PostCard";
+import { getAllPostsMeta } from '@/lib/posts'
+import { PostCard } from '@/components/PostCard'
+import ProfileCard from '@/components/ProfileCard'
 
 export default function HomePage() {
-  const posts = getAllPostsMeta();
+  const posts = getAllPostsMeta()
 
   return (
     <main className="min-h-screen px-4 py-10 text-white md:px-8">
@@ -14,12 +15,11 @@ export default function HomePage() {
             <PostCard key={post.slug} post={post} />
           ))}
         </section>
-
-        {/* 右侧：你原来的个人信息卡片，可以保留/以后再搬过来 */}
-        {/* <aside className="w-80">
-          ...你的个人卡片组件...
-        </aside> */}
+        {/* 个人卡片：md 以上才显示 */}
+        <aside className="hidden w-72  shrink-0 md:block">
+          <ProfileCard />
+        </aside>
       </div>
     </main>
-  );
+  )
 }
