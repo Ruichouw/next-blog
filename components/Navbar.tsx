@@ -50,12 +50,13 @@ export default function Navbar() {
             </div>
 
             {/* 移动端搜索图标 */}
-            <button
-              className="
-                flex h-9 w-9 items-center justify-center
-                text-slate-300 dark:text-slate-200 md:hidden
-              "
+            <Link
+              href="/search"
               aria-label="搜索"
+              className="
+                  flex h-9 w-9 items-center justify-center
+                  text-slate-300 dark:text-slate-200 md:hidden
+                "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +72,7 @@ export default function Navbar() {
                   d="M21 21l-4.35-4.35m1.65-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </button>
+            </Link>
 
             {/* 桌面端导航菜单 */}
             <nav className="hidden gap-6 text-sm md:flex">
@@ -83,7 +84,8 @@ export default function Navbar() {
 
           {/* 桌面端右侧：搜索 + 日夜切换 */}
           <div className="hidden md:flex items-center gap-6">
-            <button
+            <Link
+              href="/search"
               aria-label="搜索"
               className="text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
             >
@@ -102,7 +104,7 @@ export default function Navbar() {
                   d="M21 21l-4.35-4.35m1.65-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </button>
+            </Link>
 
             <ThemeToggle />
           </div>
