@@ -18,6 +18,37 @@ type IndexPayload = {
   index: any
 }
 type SearchHit = SearchResult & StoredPost
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function highlightText(text: string, terms: string[]) {
+  if (!text) return text
+
+  const uniq = Array.from(new Set((terms ?? []).filter((t) => t && t.length >= 2)))
+  if (uniq.length === 0) return text
+
+  uniq.sort((a, b) => b.length - a.length)
+
+  const pattern = uniq.map(escapeRegExp).join('|')
+  const re = new RegExp(`(${pattern})`, 'gi')
+
+  const parts = text.split(re)
+
+  return parts.map((part, i) => {
+    const hit = uniq.some((t) => t.toLowerCase() === part.toLowerCase())
+    return hit ? (
+      <mark
+        key={i}
+        className="rounded bg-yellow-200/70 px-1 py-0.5 text-inherit dark:bg-yellow-400/20"
+      >
+        {part}
+      </mark>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  })
+}
 
 export default function SearchClient() {
   const [q, setQ] = useState('')
@@ -79,13 +110,23 @@ export default function SearchClient() {
         {results.map((r: any) => (
           <li key={r.slug} className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
             <Link href={`/posts/${r.slug}`} className="text-lg hover:underline">
-              {r.title}
+              {highlightText(r.title, r.terms)}
             </Link>
+
             <div className="mt-1 text-xs text-zinc-500">
-              {r.date} · {r.tags?.join(' / ')}
+              {r.date} ·{' '}
+              {r.tags?.map((t: string, idx: number) => (
+                <span key={t}>
+                  {idx ? ' / ' : ''}
+                  {highlightText(t, r.terms)}
+                </span>
+              ))}
             </div>
+
             {r.excerpt ? (
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{r.excerpt}</p>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+                {highlightText(r.excerpt, r.terms)}
+              </p>
             ) : null}
           </li>
         ))}
