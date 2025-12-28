@@ -1,20 +1,20 @@
 // components/Navbar.tsx
-"use client";
+'use client'
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import ThemeToggle from "@/components/ThemeToggle"; // PC 端日夜切换
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import ThemeToggle from '@/components/ThemeToggle' // PC 端日夜切换
 
 const navItems = [
-  { href: "/", label: "首页" },
-  { href: "/categories", label: "分类" },
-  { href: "/archives", label: "归档" },
-];
+  { href: '/', label: '首页' },
+  { href: '/tags', label: '标签' },
+  { href: '/archives', label: '归档' },
+]
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
 
   return (
     <>
@@ -76,12 +76,7 @@ export default function Navbar() {
             {/* 桌面端导航菜单 */}
             <nav className="hidden gap-6 text-sm md:flex">
               {navItems.map((item) => (
-                <NavItem
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  pathname={pathname}
-                />
+                <NavItem key={item.href} href={item.href} label={item.label} pathname={pathname} />
               ))}
             </nav>
           </div>
@@ -118,9 +113,7 @@ export default function Navbar() {
       {/* 背景遮罩 */}
       <div
         className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          open
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setOpen(false)}
       />
@@ -131,15 +124,13 @@ export default function Navbar() {
           fixed inset-y-0 left-0 z-50 w-64 max-w-[80%]
           bg-slate-950/95 text-slate-100 shadow-xl
           transition-transform duration-300 md:hidden
-          ${open ? "translate-x-0" : "-translate-x-full"}
+          ${open ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* 抽屉顶部：标题 + 关闭按钮 */}
         <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
           {/* 标题 */}
-          <span className="font-serif text-xl leading-none">
-            ruichouw&apos;s blog
-          </span>
+          <span className="font-serif text-xl leading-none">ruichouw&apos;s blog</span>
 
           {/* 关闭按钮 */}
           <button
@@ -170,10 +161,7 @@ export default function Navbar() {
         {/* 抽屉中的导航项 */}
         <nav className="space-y-1 px-4 py-4 text-sm">
           {navItems.map((item) => {
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+            const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
 
             return (
               <Link
@@ -185,48 +173,46 @@ export default function Navbar() {
                   transition-colors
                   ${
                     active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      ? 'bg-slate-800 text-white'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                   }
                 `}
               >
                 <span>{item.label}</span>
-                {active && (
-                  <span className="h-1 w-1 rounded-full bg-pink-400" />
-                )}
+                {active && <span className="h-1 w-1 rounded-full bg-pink-400" />}
               </Link>
-            );
+            )
           })}
         </nav>
       </aside>
     </>
-  );
+  )
 }
 
 interface NavItemProps {
-  href: string;
-  label: string;
-  pathname: string;
+  href: string
+  label: string
+  pathname: string
 }
 
 function NavItem({ href, label, pathname }: NavItemProps) {
-  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
     <Link
       href={href}
       className={`relative px-1 text-sm font-medium transition-colors ${
         active
-          ? "text-slate-900 dark:text-white"
-          : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+          ? 'text-slate-900 dark:text-white'
+          : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
       }`}
     >
       <span className="relative z-10">{label}</span>
       <span
         className={`absolute inset-x-0 -bottom-2 h-0.5 rounded-full bg-pink-500/80 transition-transform duration-200 ${
-          active ? "scale-x-100" : "scale-x-0"
+          active ? 'scale-x-100' : 'scale-x-0'
         }`}
       />
     </Link>
-  );
+  )
 }
